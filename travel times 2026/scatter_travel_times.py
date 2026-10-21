@@ -4,6 +4,10 @@ from datetime import date
 import math
 from pathlib import Path
 
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
 
 def read_trips(csv_path, service_date, from_stop, to_stop):
     required = {
@@ -58,13 +62,6 @@ def main():
         trips = read_trips(args.csv_file, args.date, args.from_stop, args.to_stop)
     except (OSError, ValueError, csv.Error) as exc:
         parser.error(str(exc))
-
-    try:
-        import matplotlib
-        matplotlib.use("Agg")
-        import matplotlib.pyplot as plt
-    except ImportError:
-        parser.error("Install matplotlib first: python3 -m pip install matplotlib")
 
     departures, travel_times = zip(*trips.values())
     fig, ax = plt.subplots(figsize=(12, 6))

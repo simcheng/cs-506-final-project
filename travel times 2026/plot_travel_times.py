@@ -5,10 +5,13 @@ import math
 from pathlib import Path
 import sys
 
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
-def hourly_travel_times(csv_path, service_date, from_stop, to_stop):
+def hourly_travel_times(csv_path, service_date, direction, from_stop, to_stop):
     required = {
-        "service_date", "trip_id", "from_stop_name", "to_stop_name",
+        "service_date", "trip_id", "direction", "from_stop_name", "to_stop_name",
         "from_stop_departure_datetime", "travel_time_sec",
     }
     trips = {}
@@ -78,12 +81,6 @@ def main():
     except (OSError, ValueError, csv.Error) as exc:
         parser.error(str(exc))
 
-    try:
-        import matplotlib
-        matplotlib.use("Agg")  # Works in a terminal without a graphical desktop.
-        import matplotlib.pyplot as plt
-    except ImportError:
-        parser.error("Install matplotlib first: python3 -m pip install matplotlib")
 
     hours = [hour for hour in range(24) if means[hour] is not None]
     fig, ax = plt.subplots(figsize=(14, 6))
