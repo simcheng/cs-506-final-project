@@ -4,7 +4,12 @@
 
 BU students living in West Campus and Allston sometimes have to get off a train at peak hours because it becomes an express train, running directly to Harvard Avenue after two trains bunch together.
 
-On the B line around the BU stops (Kenmore to Harvard Ave), we want to predict **if, and when**, a B line train *t* arriving at stop *s1* will go express to a station *s2*.
+On the B line around the BU stops (Kenmore to Harvard Ave), we want to predict **if, and when**, a B line train *t* arriving at stop *s1* will go express to a station *s2*. Or if this is impossible, we could do smth easier:
+
+using certain feature parameters to predict the possibility of a train is going express. The potential features are:
+- Period of the day, e.g., morning or afternoon is peak period for students go to or go from BU.
+- How far away the train behind, in number of stops, or in time.
+- Weather?
 
 ## Goals
 
@@ -44,8 +49,56 @@ Successfully predict whether a train will become an express train based on the i
 | MBTA Rapid Transit Travel Times | Travel time between stations, which captures pedestrian and road traffic effects | [ArcGIS](https://mbta-massdot.opendata.arcgis.com/datasets/5f71a5c035fc4a4dad1b7fa73ba27ef8/about) |
 | MBTA B Line Schedule | The MBTA's proposed schedule | [PDF](https://cdn.mbta.com/sites/default/files/media/route_pdfs/SUB-S3-P4.pdf) |
 
-## How to Collect Data
+## Setup
 
-1. Download scripts in the repo use Python `requests` to pull the CSVs from the ArcGIS portal and the GTFS zip, so the Makefile can reproduce everything.
-2. Filter to route Green-B and the stops from Kenmore to Harvard Ave.
-3. Join headway, travel-time, and schedule records on trip ID and stop, then derive the express labels.
+Requires Python 3 (tested on 3.14).
+
+```bash
+git clone <repo-url>
+cd cs-506-final-project
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+```
+
+Download the monthly CSVs (Jan–Sep 2026) from the two ArcGIS links above and put them in:
+
+- `datasets/headway/`: files named `YYYY-MM_Headways.csv`
+- `datasets/travelTime/`: the light-rail files, named `YYYY-MM_LR*TravelTimes.csv` (the `HR` heavy-rail files are not used)
+
+The raw data is about 15 GB and is gitignored.
+
+## Running
+
+Run the three scripts in order from `src/`:
+
+```bash
+cd src
+../.venv/bin/python extract.py     # raw CSVs → B line parquet files in data_processed/data_cleaned/
+../.venv/bin/python process.py     # express labels → express_trains.parquet, GeneralStats.json
+../.venv/bin/python visualize.py   # figures/ + dwellTime.csv + figure_data/*.csv
+```
+
+Settings such as the dwell threshold (25 s) and the 6:00–22:00 window are in `src/common.py`.
+
+## Directory Tree
+
+```
+cs-506-final-project/
+├── datasets/                     # raw MBTA CSVs (not in git)
+│   ├── headway/
+│   └── travelTime/
+├── src/
+│   ├── common.py                 # stop lists, thresholds, paths
+│   ├── extract.py                # step 1: filter raw CSVs to the B line
+│   ├── process.py                # step 2: label express runs, find trains in front/behind
+│   └── visualize.py              # step 3: figures and the data behind them
+├── data_processed/
+│   ├── express_trains.parquet    # one row per express departure
+│   ├── dwellTime.csv             # data for fig1
+│   ├── GeneralStats.json         # trip, departure and express departure counts
+│   ├── data_quality.json         # cleaning counts
+│   ├── figure_data/              # data for fig2–fig7
+│   └── data_cleaned/             # intermediate parquet files (not in git)
+├── figures/                      # fig1–fig7 PNGs
+└── requirements.txt
+```

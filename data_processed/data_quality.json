@@ -1,0 +1,22 @@
+{
+  "service_days_in_raw": 270,
+  "direction_days_kept": 492,
+  "trips_on_kept_days": 58779,
+  "trips_all_8_stops": 54748,
+  "trips_interior_gap": 311,
+  "trips_interior_gap_3plus": 39,
+  "trips_labeled_all_hours": 54577,
+  "trips_in_window": 44583,
+  "express_runs_by_skipped_number": {
+    "1": 8557,
+    "2": 3758,
+    "3": 877,
+    "4": 738,
+    "5": 40,
+    "6": 68,
+    "7": 2,
+    "8": 5,
+    "11": 1
+  },
+  "express_runs_without_known_dst": 6
+}

@@ -216,3 +216,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project data: raw MBTA CSVs are ~15 GB, never commit them
+datasets/
+data_processed/data_cleaned/
+.venv/
