@@ -66,7 +66,7 @@ def main():
     departures, travel_times = zip(*trips.values())
     fig, ax = plt.subplots(figsize=(12, 6))
     ax.scatter(departures, travel_times, s=30, alpha=0.65, color="#237baf", edgecolors="none")
-    ax.set_xlabel("Departure time (seconds after midnight)")
+    ax.set_xlabel("Departure time (seconds after midnight)\n20000 = 5:33, 40000 = 11:06, 60000 = 16:40, 80000 = 22:13")
     ax.set_ylabel("Travel time (seconds)")
     ax.set_title(f"{args.from_stop} → {args.to_stop}\nService date: {args.date}")
     ax.ticklabel_format(axis="both", style="plain", useOffset=False)
