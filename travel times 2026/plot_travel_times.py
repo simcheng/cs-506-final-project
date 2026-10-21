@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-"""Plot mean travel time by departure hour for a service date and stop pair.
-
-Requires Python 3.9+ and matplotlib. Hours use the timestamps as recorded;
-no timezone conversion is performed. Exact duplicate trip records count once.
-Conflicting departure times or travel times for one trip are reported as errors.
-"""
-
 import argparse
 import csv
 from datetime import date, datetime
