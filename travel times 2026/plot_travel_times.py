@@ -15,7 +15,6 @@ import sys
 
 
 def hourly_travel_times(csv_path, service_date, from_stop, to_stop):
-    """Return 24 means (None for empty hours) and 24 unique-trip counts."""
     required = {
         "service_date", "trip_id", "from_stop_name", "to_stop_name",
         "from_stop_departure_datetime", "travel_time_sec",
