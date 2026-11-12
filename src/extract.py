@@ -22,13 +22,15 @@ def main():
     # Read everything as text; monthly files mix "NA" and "" for missing headways.
     con.sql(f"""
         COPY (
-          SELECT service_date::DATE AS service_date, trip_id, direction_id::INT AS direction_id,
+          SELECT service_date::DATE AS service_date, trip_id, TRY_CAST(direction_id AS INT) AS direction_id,
                  stop_id, stop_name,
-                 stop_departure_sec::INT AS dep_sec,
+                 TRY_CAST(stop_departure_sec AS INT) AS dep_sec,
                  TRY_CAST(headway_trunk_seconds AS INT) AS hw_trunk,
                  TRY_CAST(headway_branch_seconds AS INT) AS hw_branch
-          FROM read_csv('{RAW_HEADWAYS}/*_Headways.csv', all_varchar=true, union_by_name=true, header=true)
+          FROM read_csv('{RAW_HEADWAYS}/*_Headway*.csv', all_varchar=true, union_by_name=true, header=true)
           WHERE route_id = 'Green-B' AND stop_id IN {bline_stops}
+            AND TRY_CAST(direction_id AS INT) IS NOT NULL
+            AND TRY_CAST(stop_departure_sec AS INT) IS NOT NULL
         ) TO '{CLEANED}/headways_bline.parquet'
     """)
 
@@ -36,12 +38,14 @@ def main():
         COPY (
           SELECT service_date::DATE AS service_date, trip_id, direction_id::INT AS direction_id,
                  from_stop_id, to_stop_id,
-                 from_stop_departure_sec::INT AS from_dep_sec,
-                 to_stop_arrival_sec::INT AS to_arr_sec,
-                 travel_time_sec::INT AS travel_time_sec
+                 TRY_CAST(from_stop_departure_sec AS INT) AS from_dep_sec,
+                 TRY_CAST(to_stop_arrival_sec AS INT) AS to_arr_sec,
+                 TRY_CAST(travel_time_sec AS INT) AS travel_time_sec
           FROM read_csv('{RAW_TRAVEL}/*_LR*TravelTimes.csv', all_varchar=true, union_by_name=true, header=true)
           WHERE route_id = 'Green-B'
             AND to_stop_id IN {bline_stops}
+            AND TRY_CAST(direction_id AS INT) IS NOT NULL
+            AND TRY_CAST(to_stop_arrival_sec AS INT) IS NOT NULL
         ) TO '{CLEANED}/traveltimes_bline.parquet'
     """)
 

@@ -1,10 +1,11 @@
 """Shared constants for the B line express-run analysis."""
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 RAW_HEADWAYS = ROOT / "datasets" / "headway"
 RAW_TRAVEL = ROOT / "datasets" / "travelTime"
-PROCESSED = ROOT / "data_processed"
+PROCESSED = Path(os.environ.get("CS506_PROCESSED_DIR", ROOT / "data_processed"))
 # Intermediate tables the pipeline needs but nobody asked to read directly.
 CLEANED = PROCESSED / "data_cleaned"
 FIGURES = ROOT / "figures"
