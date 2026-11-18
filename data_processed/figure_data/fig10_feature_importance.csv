@@ -1,0 +1,24 @@
+panel,model,feature,value
+permutation_importance,boosting,delay_alert,0.0007
+permutation_importance,boosting,weekend,0.0029
+permutation_importance,boosting,hour,0.0188
+permutation_importance,boosting,sched_dev_min,0.0251
+permutation_importance,boosting,front_gap_min,0.0904
+permutation_importance,boosting,stop,0.154
+permutation_importance,boosting,behind_eta_min,0.1888
+logistic_coefficient,logistic,behind_eta_min,-1.0543
+logistic_coefficient,logistic,stop_W Amory St,-0.6273
+logistic_coefficient,logistic,stop_E BU Central,-0.5381
+logistic_coefficient,logistic,stop_W Blandford St,-0.4391
+logistic_coefficient,logistic,stop_E Amory St,-0.2654
+logistic_coefficient,logistic,stop_E Babcock St,-0.1867
+logistic_coefficient,logistic,stop_W Kenmore,-0.0657
+logistic_coefficient,logistic,delay_alert,-0.0553
+logistic_coefficient,logistic,sched_dev_min,0.1197
+logistic_coefficient,logistic,weekend,0.1216
+logistic_coefficient,logistic,missingindicator_sched_dev_min,0.1376
+logistic_coefficient,logistic,stop_W BU Central,0.2757
+logistic_coefficient,logistic,stop_E Harvard Ave,0.3164
+logistic_coefficient,logistic,front_gap_min,0.4646
+logistic_coefficient,logistic,stop_E Packard's Cnr,0.5781
+logistic_coefficient,logistic,stop_W BU East,0.8806

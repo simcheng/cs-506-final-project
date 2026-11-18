@@ -1,5 +1,5 @@
 direction,train_type,trips,p5_minutes,p25_minutes,p50_minutes,p75_minutes,p95_minutes
-West,normal,17811,11.48,12.82,13.9,15.12,17.52
-West,express,4524,10.0,11.48,12.53,13.78,16.25
-East,normal,14402,12.0,13.5,14.57,15.86,18.23
-East,express,7836,11.15,12.73,13.97,15.43,18.07
+West,normal,21308,11.1,12.53,13.68,14.93,17.37
+West,express,1027,9.6,11.62,12.9,14.32,16.74
+East,normal,21571,11.72,13.3,14.42,15.77,18.21
+East,express,667,10.48,11.9,13.02,14.21,16.12

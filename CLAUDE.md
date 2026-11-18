@@ -12,8 +12,19 @@ Run from `src/` with `../.venv/bin/python`:
 2. `process.py`: labels express runs → `express_trains.parquet`, `GeneralStats.json`,
    `data_quality.json`, plus `data_cleaned/stop_events|trips|current_stops.parquet`.
 3. `visualize.py`: `figures/fig1–fig7` + `dwellTime.csv` + `figure_data/figN_*.csv`.
+4. `download_schedule.py`: LAMP Subway Performance daily files → `data_cleaned/schedule_bline.parquet`.
+5. `features.py`: `data_cleaned/model_table.parquet` (one row per current-stop candidate).
+6. `model.py`: `model_results.json` + `data_cleaned/model/` (predictions, importance, tree).
+7. `visualize_model.py`: `figures/fig8–fig12` + `figure_data/`. `audit_new_data.py`: `new_data_audit.json`.
 
 All constants (stop ids, 25 s threshold, 6:00–22:00 window) live in `src/common.py`.
+
+## Model (November; set while the user was away, pending their review)
+
+- Prediction time = when the train ARRIVES at the current stop. Dwell at that stop is not a
+  feature (only known at departure, likely partly caused by the express call).
+- Split by month: train Jan–Jun, tune + pick threshold on Jul, report Aug–Sep once.
+- Main metric: average precision (express is 0.8% of rows).
 
 ## Definitions (agreed with the user; do not change without asking)
 
@@ -22,10 +33,12 @@ All constants (stop ids, 25 s threshold, 6:00–22:00 window) live in `src/commo
 - **Window**: keep trips whose whole corridor passage is between 6:00 and 22:00. Fig 5 is the
   only figure that shows all hours (to justify the cut).
 - **Rolled through** a stop: dwell = departure − arrival < 25 s.
-- **Express run**: a train stops at a corridor stop (src stop), then rolls through the next stop.
-  **No minimum** number of skipped stops. The run continues until the train stops again (dst stop),
-  which can be beyond Harvard Ave.
-- **Current stop** = the src stop. Every corridor stop where a train stopped is a candidate.
+- **Express run**: a train stops at a corridor stop (src stop), then rolls through at least
+  **3 corridor stops** in a row (`MIN_SKIPPED`). 1–2 skips are mostly trains with nobody waiting,
+  and runs from Babcock westbound / near Kenmore eastbound don't affect BU riders. The run
+  continues until the train stops again (dst stop), which can be beyond Harvard Ave.
+- **Current stop** = the src stop. Every corridor stop where a train stopped and that still has
+  3 corridor stops after it is a candidate (WB: Kenmore–Amory, EB: Harvard Ave–BU Central).
 - **Express %** at a stop = express departures from that stop / departures from that stop.
 - **Train in front / behind**: the previous / next B departure at the same stop, same day and
   direction, ordered by time. Never order by `trip_id`, which has no pattern.

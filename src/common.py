@@ -4,6 +4,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 RAW_HEADWAYS = ROOT / "datasets" / "headway"
 RAW_TRAVEL = ROOT / "datasets" / "travelTime"
+# MBTA LAMP exports (performancedata.mbta.com). Daily Subway Performance files are downloaded by
+# download_schedule.py; the two big Tableau exports are downloaded by hand into datasets/lamp/.
+RAW_PERFORMANCE = ROOT / "datasets" / "performance"
+RAW_ALERTS = ROOT / "datasets" / "lamp" / "LAMP_RT_ALERTS.parquet"
+RAW_ALL_RT = ROOT / "datasets" / "lamp" / "LAMP_ALL_RT_fields.parquet"
 PROCESSED = ROOT / "data_processed"
 # Intermediate tables the pipeline needs but nobody asked to read directly.
 CLEANED = PROCESSED / "data_cleaned"
@@ -35,9 +40,10 @@ BLINE = {
 # stop without opening its doors. Dwell times split into two groups, 10-20 s and 30-60 s,
 # with a dip around 20-30 s (see figures/fig1_dwell_and_travel.png).
 PASS_THRESHOLD_SEC = 25
-# Express run: the train stops at a corridor stop (the src stop), then rolls through the next
-# stop. Any number of skipped stops counts. The run ends at the first stop where it stops again
-# (dst stop), which can be beyond the corridor.
+# Express run: the train stops at a corridor stop (the src stop), then rolls through at least
+# MIN_SKIPPED corridor stops in a row. 1-2 skipped stops are mostly trains with nobody waiting.
+# The run ends at the first stop where it stops again (dst stop), which can be beyond the corridor.
+MIN_SKIPPED = 3
 # Analysis window, local hours: keep 6:00 <= departure < 22:00. Outside it, runs of skipped stops
 # are mostly empty late-night / early-morning trains, not dispatcher expresses (see fig5).
 DAY_START_HOUR, DAY_END_HOUR = 6, 22
@@ -45,3 +51,8 @@ DAY_START_HOUR, DAY_END_HOUR = 6, 22
 PEAK_WINDOWS = [(11, 13), (16, 18)]
 
 DIRECTION_LABEL = {0: "Westbound (Kenmore → Harvard Ave)", 1: "Eastbound (Harvard Ave → Kenmore)"}
+
+
+def sql_list(ids):
+    """Stop ids as a SQL IN (...) list."""
+    return "(" + ",".join(f"'{s}'" for s in ids) + ")"

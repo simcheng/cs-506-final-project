@@ -1,0 +1,16 @@
+node,depth,parent,edge_from_parent,feature,threshold,departures,express_pct,summarised
+0,0,,,behind_eta_min,3.854,143532,0.794,False
+1,1,0.0,yes,stop_W BU East,0.5,8424,6.517,False
+2,2,1.0,no,front_gap_min,10.242,7249,4.332,False
+3,3,2.0,yes,,,3555,1.828,True
+38,3,2.0,no,,,3694,6.741,True
+71,2,1.0,yes,front_gap_min,9.225,1175,20.0,False
+72,3,71.0,yes,,,462,6.926,True
+83,3,71.0,no,,,713,28.471,True
+100,1,0.0,no,behind_eta_min,5.554,135108,0.437,False
+101,2,100.0,yes,stop_W BU East,0.5,11817,1.938,False
+102,3,101.0,no,,,10368,1.273,True
+149,3,101.0,yes,,,1449,6.694,True
+180,2,100.0,no,hour,7.5,123291,0.293,False
+181,3,180.0,yes,,,14387,1.029,True
+234,3,180.0,no,,,108904,0.196,True

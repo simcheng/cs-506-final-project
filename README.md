@@ -48,6 +48,11 @@ Successfully predict whether a train will become an express train based on the i
 | MBTA Rapid Transit Headways | Time between the current and last train at a station | [ArcGIS](https://mbta-massdot.opendata.arcgis.com/datasets/fffd5e8ff7f042deb7834f3badf49e58/about) |
 | MBTA Rapid Transit Travel Times | Travel time between stations, which captures pedestrian and road traffic effects | [ArcGIS](https://mbta-massdot.opendata.arcgis.com/datasets/5f71a5c035fc4a4dad1b7fa73ba27ef8/about) |
 | MBTA B Line Schedule | The MBTA's proposed schedule | [PDF](https://cdn.mbta.com/sites/default/files/media/route_pdfs/SUB-S3-P4.pdf) |
+| MBTA LAMP Subway Performance Data | Scheduled time of every trip at every stop (schedule-deviation feature) | [performancedata.mbta.com](https://performancedata.mbta.com) |
+| MBTA LAMP alerts (`LAMP_RT_ALERTS`) | Archive of rider alerts (delay-alert feature, label check) | [performancedata.mbta.com](https://performancedata.mbta.com) |
+
+None of these sources says when a train ran express (confirmed by the MBTA and by
+`src/audit_new_data.py`), so express runs are labelled from dwell times. See `docs/november_checkin.md`.
 
 ## Setup
 
@@ -65,17 +70,26 @@ Download the monthly CSVs (Jan–Sep 2026) from the two ArcGIS links above and p
 - `datasets/headway/`: files named `YYYY-MM_Headways.csv`
 - `datasets/travelTime/`: the light-rail files, named `YYYY-MM_LR*TravelTimes.csv` (the `HR` heavy-rail files are not used)
 
+For the November model, also download `LAMP_RT_ALERTS.parquet` and `LAMP_ALL_RT_fields.parquet`
+from [performancedata.mbta.com](https://performancedata.mbta.com) into `datasets/lamp/`.
+`download_schedule.py` fetches the daily Subway Performance files itself.
+
 The raw data is about 15 GB and is gitignored.
 
 ## Running
 
-Run the three scripts in order from `src/`:
+Run the scripts in order from `src/`:
 
 ```bash
 cd src
-../.venv/bin/python extract.py     # raw CSVs → B line parquet files in data_processed/data_cleaned/
-../.venv/bin/python process.py     # express labels → express_trains.parquet, GeneralStats.json
-../.venv/bin/python visualize.py   # figures/ + dwellTime.csv + figure_data/*.csv
+../.venv/bin/python extract.py            # raw CSVs → B line parquet files in data_processed/data_cleaned/
+../.venv/bin/python process.py            # express labels → express_trains.parquet, GeneralStats.json
+../.venv/bin/python visualize.py          # figures 1–7 + dwellTime.csv + figure_data/*.csv
+../.venv/bin/python download_schedule.py  # LAMP Subway Performance Data (Jan–Sep 2026) → B line schedule
+../.venv/bin/python features.py           # model table: features known when a train arrives, train/val/test split
+../.venv/bin/python model.py              # logistic / tree / boosting / MLP → model_results.json
+../.venv/bin/python visualize_model.py    # figures 8–12 + figure_data/*.csv
+../.venv/bin/python audit_new_data.py     # what the LAMP files contain → new_data_audit.json
 ```
 
 Settings such as the dwell threshold (25 s) and the 6:00–22:00 window are in `src/common.py`.
@@ -84,21 +98,32 @@ Settings such as the dwell threshold (25 s) and the 6:00–22:00 window are in `
 
 ```
 cs-506-final-project/
-├── datasets/                     # raw MBTA CSVs (not in git)
+├── datasets/                     # raw MBTA data (not in git)
 │   ├── headway/
-│   └── travelTime/
+│   ├── travelTime/
+│   ├── performance/              # LAMP Subway Performance daily files (download_schedule.py)
+│   └── lamp/                     # LAMP_RT_ALERTS, LAMP_ALL_RT_fields
 ├── src/
 │   ├── common.py                 # stop lists, thresholds, paths
 │   ├── extract.py                # step 1: filter raw CSVs to the B line
 │   ├── process.py                # step 2: label express runs, find trains in front/behind
-│   └── visualize.py              # step 3: figures and the data behind them
+│   ├── visualize.py              # step 3: figures and the data behind them
+│   ├── download_schedule.py      # step 4: LAMP schedule for every B line trip-stop
+│   ├── features.py               # step 5: model features + time split
+│   ├── model.py                  # step 6: train, tune on July, test on Aug–Sep
+│   ├── visualize_model.py        # step 7: model figures 8–12
+│   └── audit_new_data.py         # do the LAMP files contain express ground truth?
+├── docs/
+│   └── november_checkin.md       # November check-in write-up (models and results)
 ├── data_processed/
 │   ├── express_trains.parquet    # one row per express departure
 │   ├── dwellTime.csv             # data for fig1
 │   ├── GeneralStats.json         # trip, departure and express departure counts
 │   ├── data_quality.json         # cleaning counts
+│   ├── model_results.json        # model metrics, settings, ablation
+│   ├── new_data_audit.json       # LAMP dataset audit
 │   ├── figure_data/              # data for fig2–fig7
 │   └── data_cleaned/             # intermediate parquet files (not in git)
-├── figures/                      # fig1–fig7 PNGs
+├── figures/                      # fig1–fig12 PNGs
 └── requirements.txt
 ```

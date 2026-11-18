@@ -8,15 +8,13 @@
   "trips_labeled_all_hours": 54577,
   "trips_in_window": 44583,
   "express_runs_by_skipped_number": {
-    "1": 8557,
-    "2": 3758,
-    "3": 877,
-    "4": 738,
-    "5": 40,
-    "6": 68,
-    "7": 2,
+    "3": 857,
+    "4": 729,
+    "5": 37,
+    "6": 66,
+    "7": 1,
     "8": 5,
     "11": 1
   },
-  "express_runs_without_known_dst": 6
+  "express_runs_without_known_dst": 0
 }

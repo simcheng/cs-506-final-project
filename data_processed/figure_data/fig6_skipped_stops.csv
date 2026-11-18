@@ -1,15 +1,15 @@
 direction,stop,express_trips,skipped_pct
-West,Blandford St,4526,24.15
-West,BU East,4526,24.48
-West,BU Central,4526,41.52
-West,Amory St,4526,32.41
-West,Babcock St,4526,30.56
-West,Packard's Cnr,4526,41.6
-West,Harvard Ave,4526,2.1
-East,Packard's Cnr,7843,4.35
-East,Babcock St,7843,48.11
-East,Amory St,7843,62.87
-East,BU Central,7843,22.81
-East,BU East,7843,23.58
-East,Blandford St,7843,7.94
-East,Kenmore,7843,0.28
+West,Blandford St,1029,18.76
+West,BU East,1029,18.76
+West,BU Central,1029,70.55
+West,Amory St,1029,95.04
+West,Babcock St,1029,91.64
+West,Packard's Cnr,1029,89.41
+West,Harvard Ave,1029,1.46
+East,Packard's Cnr,667,36.88
+East,Babcock St,667,83.81
+East,Amory St,667,94.3
+East,BU Central,667,86.81
+East,BU East,667,26.39
+East,Blandford St,667,14.84
+East,Kenmore,667,0.15

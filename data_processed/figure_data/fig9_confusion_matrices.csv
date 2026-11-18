@@ -1,0 +1,17 @@
+model,true,predicted,departures,pct_of_true_class
+boosting,normal,normal,36100,99.11
+boosting,normal,express,323,0.89
+boosting,express,normal,211,63.94
+boosting,express,express,119,36.06
+mlp,normal,normal,36156,99.27
+mlp,normal,express,267,0.73
+mlp,express,normal,228,69.09
+mlp,express,express,102,30.91
+tree,normal,normal,36099,99.11
+tree,normal,express,324,0.89
+tree,express,normal,211,63.94
+tree,express,express,119,36.06
+logistic,normal,normal,35986,98.8
+logistic,normal,express,437,1.2
+logistic,express,normal,223,67.58
+logistic,express,express,107,32.42

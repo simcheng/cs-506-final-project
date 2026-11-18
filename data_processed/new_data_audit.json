@@ -1,0 +1,161 @@
+{
+  "LAMP_RT_ALERTS": {
+    "rows": 5215905,
+    "distinct_alerts": 414619,
+    "created_first": "2018-09-26 14:49:25",
+    "created_last": "2026-11-17 23:09:15",
+    "green_b_alerts_all_years": 3731,
+    "green_b_alerts_jan_sep_2026": 664,
+    "green_b_jan_sep_2026_by_effect_detail": {
+      "ELEVATOR_CLOSURE": 260,
+      "DELAY": 199,
+      "ESCALATOR_CLOSURE": 167,
+      "SHUTTLE": 13,
+      "SUSPENSION": 10,
+      "NOTICE": 6,
+      "SERVICE_CHANGE": 5,
+      "STATION_CLOSURE": 4
+    },
+    "keyword_alerts": {
+      "express": {
+        "any_route": 233,
+        "green_b": 0,
+        "green_b_effect_detail": {}
+      },
+      "skip": {
+        "any_route": 2196,
+        "green_b": 0,
+        "green_b_effect_detail": {}
+      },
+      "bypass": {
+        "any_route": 3340,
+        "green_b": 29,
+        "green_b_effect_detail": {
+          "SUSPENSION": 1,
+          "NOTICE": 2,
+          "DELAY": 1,
+          "STATION_CLOSURE": 20,
+          "SERVICE_CHANGE": 5
+        }
+      },
+      "not stop": {
+        "any_route": 124,
+        "green_b": 4,
+        "green_b_effect_detail": {
+          "SHUTTLE": 4
+        }
+      },
+      "run through": {
+        "any_route": 6,
+        "green_b": 2,
+        "green_b_effect_detail": {
+          "SHUTTLE": 2
+        }
+      }
+    },
+    "routes_with_express_alerts_top5": {
+      "CR-Haverhill": 75,
+      "CR-Newburyport": 23,
+      "CR-Middleborough": 19,
+      "CR-Greenbush": 19,
+      "CR-Lowell": 19
+    }
+  },
+  "subway_performance_data": {
+    "daily_files_jan_sep_2026": 272,
+    "green_b_rows": 1353073,
+    "green_b_days": 260,
+    "columns": [
+      "stop_sequence",
+      "stop_id",
+      "parent_station",
+      "move_timestamp",
+      "stop_timestamp",
+      "travel_time_seconds",
+      "dwell_time_seconds",
+      "headway_trunk_seconds",
+      "headway_branch_seconds",
+      "occupancy_status",
+      "occupancy_percentage",
+      "service_date",
+      "route_id",
+      "direction_id",
+      "start_time",
+      "vehicle_id",
+      "branch_route_id",
+      "trunk_route_id",
+      "stop_count",
+      "trip_id",
+      "vehicle_label",
+      "vehicle_consist",
+      "direction",
+      "direction_destination",
+      "scheduled_arrival_time",
+      "scheduled_departure_time",
+      "scheduled_travel_time",
+      "scheduled_headway_branch",
+      "scheduled_headway_trunk"
+    ],
+    "columns_about_skipping": [],
+    "green_b_share_with_scheduled_departure": 0.9963091422266205,
+    "green_b_share_with_occupancy": 0.0,
+    "our_stop_events": 1191774,
+    "matched_to_our_stop_events": 1134731,
+    "matched_arrival_differs": 15,
+    "matched_dwell_differs": 1749,
+    "matched_headway_differs": 18,
+    "matched_rows_with_all_values": 1094372,
+    "share_identical_where_both_have_values": 0.9995093076211745
+  },
+  "LAMP_ALL_RT_fields": {
+    "rows": 93681122,
+    "first_service_date": "2019-09-16",
+    "last_service_date": "2026-11-17",
+    "green_b_rows": 13886977,
+    "columns": [
+      "service_date",
+      "start_datetime",
+      "static_start_datetime",
+      "stop_sequence",
+      "canonical_stop_sequence",
+      "previous_canonical_stop_sequence",
+      "sync_stop_sequence",
+      "previous_sync_stop_sequence",
+      "stop_id",
+      "previous_stop_id",
+      "parent_station",
+      "previous_parent_station",
+      "stop_name",
+      "previous_stop_name",
+      "previous_stop_departure_datetime",
+      "stop_arrival_datetime",
+      "stop_departure_datetime",
+      "previous_stop_departure_sec",
+      "stop_arrival_sec",
+      "stop_departure_sec",
+      "is_revenue",
+      "direction_id",
+      "route_id",
+      "branch_route_id",
+      "trunk_route_id",
+      "start_time",
+      "vehicle_id",
+      "stop_count",
+      "trip_id",
+      "vehicle_label",
+      "vehicle_consist",
+      "direction",
+      "direction_destination",
+      "static_trip_id_guess",
+      "static_start_time",
+      "static_stop_count",
+      "exact_static_trip_match",
+      "static_version_key",
+      "travel_time_seconds",
+      "dwell_time_seconds",
+      "headway_trunk_seconds",
+      "headway_branch_seconds"
+    ],
+    "columns_about_skipping": []
+  }
+}

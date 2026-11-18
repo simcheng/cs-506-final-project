@@ -1,13 +1,14 @@
 """Step 2: find express runs and measure the trains around them at the current stop.
 
-Express run: a train stops at a corridor stop (src stop), then rolls through the next stop
-(dwell < PASS_THRESHOLD_SEC) without opening its doors. Any number of skipped stops counts. The
+Express run: a train stops at a corridor stop (src stop), then rolls through (dwell <
+PASS_THRESHOLD_SEC) at least MIN_SKIPPED corridor stops in a row without opening its doors. The
 run ends at the first stop where it stops again (dst stop), which can be beyond Harvard Ave.
 We cannot use "missing stop rows" because the MBTA feed records a departure event at every stop a
 train passes, stopped or not.
 
-Current stop: every corridor stop where a train stopped is a possible src stop. The train counts
-as express from that stop if it rolls through the next stop. Express % at a stop =
+Current stop: every corridor stop where a train stopped, and that still has MIN_SKIPPED corridor
+stops after it, is a possible src stop. The train counts as express from that stop if an express
+run starts there. Express % at a stop =
 express runs starting there / trains that stopped and departed there.
 
 Outputs:
@@ -25,7 +26,7 @@ import duckdb
 import numpy as np
 import pandas as pd
 
-from common import (BLINE, CORRIDOR, CORRIDOR_NAMES, DAY_END_HOUR, DAY_START_HOUR, PASS_THRESHOLD_SEC,
+from common import (BLINE, CORRIDOR, CORRIDOR_NAMES, DAY_END_HOUR, DAY_START_HOUR, MIN_SKIPPED, PASS_THRESHOLD_SEC,
                     CLEANED, PROCESSED)
 
 MIN_DEPARTURES_PER_STOP_DAY = 20  # below this, the corridor was bustituted / shut that day
@@ -78,8 +79,8 @@ def label_trips(ev):
             continue  # cannot tell stopped from rolled through at every corridor stop
         passed = [dwell[s] < PASS_THRESHOLD_SEC for s in CORRIDOR[d]]
         n_runs = 0
-        for k in range(len(CORRIDOR[d]) - 1):
-            if passed[k] or not passed[k + 1]:
+        for k in range(len(CORRIDOR[d]) - MIN_SKIPPED):
+            if passed[k] or not all(passed[k + 1:k + 1 + MIN_SKIPPED]):
                 continue
             # Stopped at k, rolled through k + 1: walk down the B line until it stops again.
             j = BLINE[d].index(CORRIDOR[d][k]) + 1
@@ -101,15 +102,15 @@ def label_trips(ev):
 
 
 def current_stop_candidates(trips, ev):
-    """One row per trip x corridor stop where it stopped (not the last stop): a possible src stop."""
+    """One row per trip x corridor stop where it stopped and an express run could still start."""
     dep = ev.set_index(["service_date", "direction_id", "trip_id", "stop_id"]).dep_sec
     rows = []
     for t in trips.itertuples():
         passed = [getattr(t, f"passed_{i}") for i in range(len(CORRIDOR[t.direction_id]))]
-        for k in range(len(passed) - 1):
+        for k in range(len(passed) - MIN_SKIPPED):
             if not passed[k]:
                 rows.append((t.service_date, t.direction_id, t.trip_id, k, CORRIDOR[t.direction_id][k],
-                             bool(passed[k + 1])))
+                             all(passed[k + 1:k + 1 + MIN_SKIPPED])))
     c = pd.DataFrame(rows, columns=["service_date", "direction_id", "trip_id", "corridor_idx", "stop_id",
                                     "goes_express"])
     c["dep_sec"] = dep.reindex(pd.MultiIndex.from_frame(c[["service_date", "direction_id", "trip_id",

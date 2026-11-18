@@ -228,7 +228,7 @@ def fig5_when(trips):
     cb = fig.colorbar(im, ax=heat_axes, pad=0.02, shrink=0.9)
     cb.set_label("Trips that go express (%)")
     cb.outline.set_visible(False)
-    fig.suptitle("When express runs happen: highest early morning and late night, lowest in the afternoon",
+    fig.suptitle("When express runs happen: westbound peaks at 12:00 and 17:00; spikes before 6:00 and after 22:00 are excluded",
                  x=0.01, ha="left", fontsize=13, fontweight="bold", y=0.98)
     save(fig, "fig5_express_by_time.png", pd.concat(tables).round(3))
 

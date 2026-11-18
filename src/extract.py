@@ -7,11 +7,7 @@ Outputs (data_processed/data_cleaned/):
 """
 import duckdb
 
-from common import BLINE, CLEANED, RAW_HEADWAYS, RAW_TRAVEL
-
-
-def sql_list(ids):
-    return "(" + ",".join(f"'{s}'" for s in ids) + ")"
+from common import BLINE, CLEANED, RAW_HEADWAYS, RAW_TRAVEL, sql_list
 
 
 def main():
