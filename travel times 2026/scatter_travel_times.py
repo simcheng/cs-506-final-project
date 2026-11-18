@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 def read_trips(csv_path, service_date, from_stop, to_stop):
     required = {
         "service_date", "trip_id", "from_stop_name", "to_stop_name",
-        "from_stop_departure_sec", "travel_time_sec",
+        "from_stop_departure_sec", "travel_time_sec"
     }
     trips = {}
     with open(csv_path, newline="", encoding="utf-8-sig") as source:
@@ -25,6 +25,7 @@ def read_trips(csv_path, service_date, from_stop, to_stop):
                 row["service_date"] == service_date
                 and row["from_stop_name"] == from_stop
                 and row["to_stop_name"] == to_stop
+                and int(row["from_stop_departure_sec"]) not in range(28800, 75600)
             ):
                 continue
             try:
@@ -32,6 +33,8 @@ def read_trips(csv_path, service_date, from_stop, to_stop):
                 if not trip_id:
                     raise ValueError("empty trip_id")
                 departure = float(row["from_stop_departure_sec"])
+                if departure < 28800 or departure > 75600:
+                    continue
                 travel_time = float(row["travel_time_sec"])
                 if not all(math.isfinite(v) and v >= 0 for v in (departure, travel_time)):
                     raise ValueError("departure and travel seconds must be finite and nonnegative")
